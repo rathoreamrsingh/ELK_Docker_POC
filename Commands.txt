@@ -1,5 +1,5 @@
 #Commands 
-
+docker run --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "xpack.security.enabled=true" bdf941b0db1f
 
 #kibana
 docker run --name kibana --link elasticsearch:elasticsearch -p 5601:5601 kibana:7.6.2
@@ -8,6 +8,7 @@ docker run --name kibana --link elasticsearch:elasticsearch -p 5601:5601 kibana:
 
 
 #Curl 
+-- create index elastic
 curl -u elastic:81KEvSyPYLBluzU5RPVu -X PUT "localhost:9200/twitter?pretty"
 
 curl -u elastic:81KEvSyPYLBluzU5RPVu -X POST "localhost:9200/twitter/_doc/?pretty" -H 'Content-Type: application/json' -d'
@@ -18,7 +19,7 @@ curl -u elastic:81KEvSyPYLBluzU5RPVu -X POST "localhost:9200/twitter/_doc/?prett
 }
 '
 
-
+-- create role 
 https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-put-role.html
 
 curl -u elastic:81KEvSyPYLBluzU5RPVu -X POST "localhost:9200/_security/role/fb_user_role?pretty" -H 'Content-Type: application/json' -d'
@@ -33,3 +34,17 @@ curl -u elastic:81KEvSyPYLBluzU5RPVu -X POST "localhost:9200/_security/role/fb_u
 }
 '
 
+--create user
+https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-put-user.html
+
+curl -u elastic:81KEvSyPYLBluzU5RPVu -X POST "localhost:9200/_security/user/jacknich?pretty" -H 'Content-Type: application/json' -d'
+{
+  "password" : "j@rV1s",
+  "roles" : [ "fb_user_role", "kibana_user" ],
+  "full_name" : "Jack Nicholson",
+  "email" : "jacknich@example.com",
+  "metadata" : {
+    "intelligence" : 7
+  }
+}
+'
